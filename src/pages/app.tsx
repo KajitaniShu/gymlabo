@@ -5,7 +5,6 @@ import StageCollision from '../features/Canvas/StageCollision'
 import { Physics } from '@react-three/rapier';
 import { useHotkeys, useViewportSize  } from '@mantine/hooks';
 import Content from '../components/Content'
-import {OrbitControls } from '@react-three/drei'
 import { CameraManager } from '../features/Canvas/CameraManager'
 import TargetDetail from '../components/TargetDetail'
 import Access from '../features/Canvas/Access'
@@ -39,7 +38,7 @@ export function App() {
           width: width,
           zIndex: -1
         }}
-        camera={{ position: [-3,3,3],  }}
+        camera={{ position: [-3,3,3],  fov: 60}}
       
       >
         <ambientLight intensity={2}/>
@@ -57,7 +56,6 @@ export function App() {
               modelPath={'/gymlabo_sub.glb'}
             />
             <StageCollision />
-            <OrbitControls />
             <Content />
             <Access target={target} />
           </Physics>
