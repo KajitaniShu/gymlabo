@@ -6,12 +6,13 @@ import { Physics } from '@react-three/rapier';
 import { useHotkeys, useViewportSize  } from '@mantine/hooks';
 import Content from '../components/Content'
 import { CameraManager } from '../features/Canvas/CameraManager'
-import TargetDetail from '../components/TargetDetail'
+import { TargetDetail } from '../components/TargetDetail'
 import Access from '../features/Canvas/Access'
+import { Loading } from '../features/Canvas/Loading'
 
 import { FC, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Sky, Preload, useProgress } from '@react-three/drei'
+import { Preload } from '@react-three/drei'
 
 
 export function App() {
@@ -43,13 +44,14 @@ export function App() {
       >
         <ambientLight intensity={2}/>
         <directionalLight
+          color="#FAF0E6"
           position={[-10,20,0]}
           intensity={3}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           castShadow
         />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Loading />}>
           <CameraManager cameraRef={ref} target={target} setTarget={setTarget} />
           <Physics debug={debug}>
             <Scene
