@@ -10,13 +10,13 @@ export default function Access({target}: any) {
     <>
     {target === 7 &&
       <group>
-        <Html center position={[7, 1.8, 0]}>
+        <Html center position={[7, 2.8, 0]}>
           <Badge color="blue" size="lg" variant="dot" bg="white">小倉駅</Badge>
         </Html>
-        <Html center position={[-2, 1, 1.3]}>
+        <Html center position={[-2.5, 1, 2.2]}>
           <Badge color="green" size="lg" variant="dot" bg="white">GYMLABO</Badge>
         </Html>
-        <Html center position={[0, 1, -6]}>
+        <Html center position={[0, 1.7, -6]}>
           <Badge color="orange" size="lg" variant="dot" bg="white">九州工大前</Badge>
         </Html>
         <Html center position={[4.5, 0, 0.3]}>
