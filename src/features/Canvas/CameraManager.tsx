@@ -45,28 +45,28 @@ export function CameraManager({cameraRef, target, setTarget}:any) {
   } );
   
   // debug
-  // const [datas, set] = useControls(() => ({
-  //   position:         [0, 0, 0],
-  //   target:           [0, 0, 0],
-  //   rotate:           0,
-  //   autoRotate:       autoRotate,
-  //   targetNumber:     target,
-  //   prevTargetNumber: prevTarget,
-  //   button:           button(switchDebugging),
-  //   button2:           button(()=>cameraRef.current?.setTarget(10, 0, 0, true))
-  // }))
+  const [datas, set] = useControls(() => ({
+    position:         [0, 0, 0],
+    target:           [0, 0, 0],
+    rotate:           0,
+    autoRotate:       autoRotate,
+    targetNumber:     target,
+    prevTargetNumber: prevTarget,
+    button:           button(switchDebugging),
+    button2:           button(()=>cameraRef.current?.setTarget(10, 0, 0, true))
+  }))
   
   useFrame(({camera}, delta, xrFrame) => {
     // debug 
-    // set({
-    //   position:         [camera.position.x, camera.position.y, camera.position.z],
-    //   target:           [cameraRef.current._target.x, cameraRef.current._target.y, cameraRef.current._target.z],
-    //   autoRotate:       autoRotate,
-    //   targetNumber:     target,
-    //   prevTargetNumber: prevTarget,
-    //   rotate:           cameraRef.current.azimuthAngle % (2 * Math.PI),
-    // });
-    // if(debugging) return;
+    set({
+      position:         [camera.position.x, camera.position.y, camera.position.z],
+      target:           [cameraRef.current._target.x, cameraRef.current._target.y, cameraRef.current._target.z],
+      autoRotate:       autoRotate,
+      targetNumber:     target,
+      prevTargetNumber: prevTarget,
+      rotate:           cameraRef.current.azimuthAngle % (2 * Math.PI),
+    });
+    if(debugging) return;
     
     // 現在の角度とトリガー角度の差が0.01以下になった場合，注視点のindexを取得
     var index = autoRotate ? path.camera_path.findIndex(({triggerAngle}: any) => Math.abs(triggerAngle - cameraRef.current.azimuthAngle) < 0.01) : -1;
