@@ -15,7 +15,7 @@ export default function MoveCharacter({path, ...props}: any) {
     const move = () => {
       api.start({ 'position-x': isMove ? 3 : 0 });
       isMove = !isMove;
-      timer = setTimeout(move, (1 + Math.random() * 10) * 1000);
+      timer = setTimeout(move, (1 + Math.random() * 6) * 1000);
     }
     move();
     return () => clearTimeout(timer)

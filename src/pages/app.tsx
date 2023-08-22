@@ -58,7 +58,7 @@ export function App() {
               modelPath={'/gymlabo_sub.glb'}
             />
             <StageCollision />
-            <Content />
+            <Content debug={debug}/>
             <Access target={target} />
           </Physics>
         </Suspense>
