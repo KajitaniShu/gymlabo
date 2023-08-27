@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useGLTF, Shadow } from '@react-three/drei'
-import { useSpring, animated, config } from '@react-spring/three'
-import * as THREE from 'three'
-import { useFrame } from '@react-three/fiber'
+import { useSpring, animated } from '@react-spring/three'
 
 
 export default function MoveCharacter({path, ...props}: any) {

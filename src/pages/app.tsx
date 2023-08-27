@@ -9,10 +9,11 @@ import { CameraManager } from '../features/Canvas/CameraManager'
 import { TargetDetail } from '../components/TargetDetail'
 import Access from '../features/Canvas/Access'
 import { Loading } from '../features/Canvas/Loading'
-
 import { FC, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Preload } from '@react-three/drei'
+import { EffectComposer, SMAA, HueSaturation } from '@react-three/postprocessing'
+import AutoFocusDOF from '../features/Canvas/AutoFocusDOF'
 
 
 export function App() {
@@ -31,7 +32,7 @@ export function App() {
       <TargetDetail target={target} />
       <Canvas
         style={{
-          backgroundColor: "#C9DBB2",
+          backgroundColor: "transparent",
           position: 'absolute',
           top: 0,
           left: 0,
@@ -42,15 +43,23 @@ export function App() {
         camera={{ position: [-3,3,3],  fov: 60}}
       
       >
-        <ambientLight intensity={2}/>
+        <color attach="background" args={["#C9DBB2"]} />
+        <ambientLight intensity={2.6}/>
         <directionalLight
-          color="#FAF0E6"
+          color="white"
           position={[-10,20,0]}
-          intensity={3}
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-          castShadow
+          intensity={2.5}
         />
+        <EffectComposer disableNormalPass >
+          <AutoFocusDOF
+            bokehScale={1} //blur scale
+            resolution={1024} //resolution (decrease for performance)
+            mouseFocus={false} //if false, the center of the screen will be the focus
+            focusSpeed={0.05} // milliseconds to focus a new detected mesh
+            focalLength={0.001} //how far the focus should go
+          />
+          <HueSaturation hue={0.05} saturation={0} />
+        </EffectComposer>
         <Suspense fallback={<Loading />}>
           <CameraManager cameraRef={ref} target={target} setTarget={setTarget} />
           <Physics debug={debug}>
