@@ -14,7 +14,7 @@ export function CameraManager({cameraRef, target, setTarget}:any) {
   const [dragging, setDragging]     = useState<boolean>(false);
   const [prevTarget, setPrevTarget] = useState<number>(-1);
   const switchDebugging = () => setDebbugging((prev) => !prev);
-  const idle = useIdle(3000);
+  const idle = useIdle(1000);
   let timer = 0.0;
 
   // カメラの動きが止まった時 → 回転させる
@@ -93,6 +93,7 @@ export function CameraManager({cameraRef, target, setTarget}:any) {
       
       // 指定時間超えたら
       if(timer > 3) {
+        if(!idle) return;                 // アイドル状態出ない場合はreturn
         setTarget(-1);                    // 注目点解除
         if(resetPosition !== null) {
           cameraRef.current?.setLookAt(
@@ -109,7 +110,7 @@ export function CameraManager({cameraRef, target, setTarget}:any) {
         }
         cameraRef.current?.addEventListener( 'rest', onRest );
       } 
-      else if(idle) timer += delta;       // アイドル状態の時のみタイマー加算
+      else timer += delta;
     }
 
     // autoRotate = trueの時，カメラを回転させる

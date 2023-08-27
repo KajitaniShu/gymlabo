@@ -12,7 +12,6 @@ import { Loading } from '../features/Canvas/Loading'
 import { FC, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Preload } from '@react-three/drei'
-import { EffectComposer, SMAA, HueSaturation } from '@react-three/postprocessing'
 import AutoFocusDOF from '../features/Canvas/AutoFocusDOF'
 
 
@@ -50,16 +49,6 @@ export function App() {
           position={[-10,20,0]}
           intensity={2.5}
         />
-        <EffectComposer disableNormalPass >
-          <AutoFocusDOF
-            bokehScale={1} //blur scale
-            resolution={1024} //resolution (decrease for performance)
-            mouseFocus={false} //if false, the center of the screen will be the focus
-            focusSpeed={0.05} // milliseconds to focus a new detected mesh
-            focalLength={0.001} //how far the focus should go
-          />
-          <HueSaturation hue={0.05} saturation={0} />
-        </EffectComposer>
         <Suspense fallback={<Loading />}>
           <CameraManager cameraRef={ref} target={target} setTarget={setTarget} />
           <Physics debug={debug}>
