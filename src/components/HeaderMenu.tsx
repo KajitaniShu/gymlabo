@@ -18,7 +18,8 @@ import {
   ScrollArea,
   rem,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
+import { useDisclosure, useViewportSize  } from '@mantine/hooks';
 import {
   IconNotification,
   IconCode,
@@ -94,6 +95,8 @@ const useStyles = createStyles((theme) => ({
       paddingRight: rem(20),
       borderRadius:"100px 0px 0px 100px"
     },
+    backgroundColor:'white',
+    border: "1px solid #DEE2E6" 
   },
 
   hiddenMobile: {
@@ -156,6 +159,23 @@ export default function HeaderMenu({setTarget}: any) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
+  const { height, width } = useViewportSize();
+
+  const openTalkTagForm = () =>
+    modals.openConfirmModal({
+      title: 'Delete your profile',
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to delete your profile? This action is destructive and you will have
+          to contact support to restore your data.
+        </Text>
+      ),
+      labels: { confirm: 'Delete account', cancel: "No don't delete it" },
+      confirmProps: { color: 'red' },
+      onCancel: () => console.log('Cancel'),
+      onConfirm: () => console.log('Confirmed'),
+    });
 
   const links = path.map((item, index) => (
     <UnstyledButton className={classes.subLink} key={item.title} onClick={() => { setTarget(index); closeDrawer();}}>
@@ -176,25 +196,27 @@ export default function HeaderMenu({setTarget}: any) {
   ));
 
   return (
-    <Group position="right">
-      <Header height={60} style={{backgroundColor:'white'}} className={classes.header}>
+    <Group position="right" h={rem(100)} w={width} >
+      <Header height={rem(60)} className={classes.header}>
         <Group position="right" sx={{ height: '100%' }} className={classes.hiddenMobile}>
 
           <Group sx={{ height: '100%' }} spacing={0} >
-            <a href="#" className={classes.link}>
+            <a href="/" className={classes.link}>
               Home
             </a>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
-              <HoverCard.Target>
-                <a href="#" className={classes.link}>
-                  <Center inline>
-                    <Box component="span" mr={5} >
-                      施設
-                    </Box>
-                    <IconChevronDown size={16} color="#7A9D54"/>
-                  </Center>
-                </a>
-              </HoverCard.Target>
+              {setTarget !== null && 
+                <HoverCard.Target>
+                  <a href="#" className={classes.link}>
+                    <Center inline>
+                      <Box component="span" mr={5} >
+                        施設
+                      </Box>
+                      <IconChevronDown size={16} color="#7A9D54"/>
+                    </Center>
+                  </a>
+                </HoverCard.Target>
+              }
 
               <HoverCard.Dropdown sx={{ overflow: 'hidden' }} >
                 <Group position="apart" px="md">
@@ -225,16 +247,16 @@ export default function HeaderMenu({setTarget}: any) {
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
-            <a href="#" className={classes.link}>
+            <a href="" className={classes.link}>
               <Text color="dimmed">イベント情報</Text>
             </a>
-            <a href="#" className={classes.link}>
+            <a href="" className={classes.link}>
               <Text color="dimmed">予約状況</Text>
             </a>
-            <a href="#" className={classes.link}>
-              <Text color="dark">公式ブログ</Text>
+            <a href="/talktag"  className={classes.link}>
+              <Text color="dark">話したい札</Text>
             </a>
-            <a href="#" className={classes.link}>
+            <a href="" className={classes.link}>
               <Text color="dark">お問い合わせ</Text>
             </a>
           </Group>

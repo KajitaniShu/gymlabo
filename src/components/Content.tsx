@@ -35,7 +35,7 @@ export default function Content({debug}: any) {
               )}
             </CopyButton>  
           </Html>
-          <MoveCharacter ref={ref}  position={[0, 0 ,0]} rotation-y={0} path={"/character/character2.glb"} scale={[0.023, 0.023, 0.023]} />
+          <NodCharacter ref={ref}  position={[0, 0 ,0]} rotation-y={0} path={"/character/character2.glb"} scale={[0.023, 0.023, 0.023]} />
         </PivotControls>
       }
 

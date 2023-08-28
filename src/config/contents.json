@@ -11,6 +11,18 @@
       "rotationY":-3,
       "scale": [0.023, 0.023, 0.023],
       "path": "/character/character2.glb"
+    },
+    {
+      "position": [-0.4786467379141975, 0.03563980098053267, 0.5330370966902311], 
+      "rotationY":0,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [-0.5315880693882318, 0.035364761461156746, 0.5982632790773244], 
+      "rotationY":-0.7106581561300319,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
     }
 
   ],
@@ -44,6 +56,12 @@
       "rotationY": 0,
       "scale": [0.023, 0.023, 0.023],
       "path": "/character/character2.glb"
+    },
+    {
+      "position": [-0.5759221511248618, 0.035364761461156746, 0.5090445640406753], 
+      "rotationY":0.885085907475757,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
     }
   ],
   "moveCharacter": [
@@ -64,7 +82,56 @@
       "rotationY":0,
       "scale": [0.023, 0.023, 0.023],
       "path": "/character/character2.glb"
+    },
+    {
+      "position": [-1.100353851221191, 0.32951222672116726, 1.0816117108934558],  
+      "rotationY":0,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [0, 0.04001514311966431, -1.3779013258451605], 
+      "rotationY":0,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [1.5072500178475174, 0.03614550748635746, -0.9841266922206993], 
+      "rotationY":0,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [1.6642843827578477, 0.037596060983312446, 1.199224697979204], 
+      "rotationY":0,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [-0.5716176897266423, 0.037596060983312446, 0.9135975954575477], 
+      "rotationY":-0.8651090304064587,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [0.049143793748663074, 0.03887478699493105, -0.13445496373631968], 
+      "rotationY":0.9985690289375149,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [-0.9491409871153528, 0.03619716855739067, -0.1861432674260082], 
+      "rotationY":-0.8629389350659867,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
+    },
+    {
+      "position": [0, 0.3334057137981584, -0.9460213749822974], 
+      "rotationY":0,
+      "scale": [0.023, 0.023, 0.023],
+      "path": "/character/character2.glb"
     }
+
   ],
   "studyCharacter": [
     {

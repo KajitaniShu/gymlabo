@@ -1,68 +1,23 @@
-import { useState, useRef } from 'react'
-import HeaderMenu from '../components/HeaderMenu'
-import Scene from '../features/Canvas/Scene'
-import StageCollision from '../features/Canvas/StageCollision'
-import { Physics } from '@react-three/rapier';
-import { useHotkeys, useViewportSize  } from '@mantine/hooks';
-import Content from '../components/Content'
-import { CameraManager } from '../features/Canvas/CameraManager'
-import { TargetDetail } from '../components/TargetDetail'
-import Access from '../features/Canvas/Access'
-import { Loading } from '../features/Canvas/Loading'
-import { FC, Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Preload } from '@react-three/drei'
-import AutoFocusDOF from '../features/Canvas/AutoFocusDOF'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from 'react-router-dom'
+import Home from '../components/Home'
+import { TalkTagForm } from '../features/TalkTagForm'
+import { ModalsProvider } from '@mantine/modals';
 
 
 export function App() {
-  const [debug, setDebug] = useState<boolean>(false);
-  const { height, width } = useViewportSize();
-  const ref = useRef();
-  const [target, setTarget] = useState<number>(-1);
-
-  useHotkeys([
-    ['alt+shift+D', () => setDebug(!debug)],
-  ]);
-
   return(
     <>
-      <HeaderMenu setTarget={setTarget}/>
-      <TargetDetail target={target} />
-      <Canvas
-        style={{
-          backgroundColor: "transparent",
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          height: height,
-          width: width,
-          zIndex: -1
-        }}
-        camera={{ position: [-3,3,3],  fov: 60}}
-      
-      >
-        <color attach="background" args={["#C9DBB2"]} />
-        <ambientLight intensity={2.6}/>
-        <directionalLight
-          color="white"
-          position={[-10,20,0]}
-          intensity={2.5}
-        />
-        <Suspense fallback={<Loading />}>
-          <CameraManager cameraRef={ref} target={target} setTarget={setTarget} />
-          <Physics debug={debug}>
-            <Scene
-              modelPath={'/gymlabo_sub.glb'}
-            />
-            <StageCollision />
-            <Content debug={debug}/>
-            <Access target={target} />
-          </Physics>
-        </Suspense>
-        <Preload all />
-      </Canvas> 
-        
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/talktag" element={<TalkTagForm/>} />
+          <Route path="*" element={<></>} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
