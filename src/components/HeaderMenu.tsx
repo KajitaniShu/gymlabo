@@ -3,7 +3,7 @@ import {
   Header,
   HoverCard,
   Group,
-  Title,
+  NavLink,
   UnstyledButton,
   Text,
   SimpleGrid,
@@ -12,61 +12,61 @@ import {
   Divider,
   Center,
   Box,
-  Burger,
   Drawer,
-  Collapse,
-  ScrollArea,
+  getStylesRef,
   rem,
+  Container,
 } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import { useDisclosure, useViewportSize  } from '@mantine/hooks';
 import {
   IconNotification,
   IconCode,
   IconBook,
   IconChartPie3,
-  IconFingerprint,
+  IconSignRight,
   IconCoin,
   IconChevronDown,
-  IconBarrierBlock,
-  IconExternalLink,
+  IconHome2,
+  IconUserPin,
+  IconMessageQuestion,
+  IconFingerprint,
+  IconCalendarStats,
   IconMenu2
 } from '@tabler/icons-react';
 
+
 const useStyles = createStyles((theme) => ({
   link: {
+    ...theme.fn.focusStyles(),
     display: 'flex',
     alignItems: 'center',
-    height: '100%',
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
     textDecoration: 'none',
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-    fontWeight: 500,
     fontSize: theme.fontSizes.sm,
+    color: theme.colors.dark[5],
+    padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+    borderRadius: theme.radius.sm,
+    fontWeight: 500,
 
-    [theme.fn.smallerThan('sm')]: {
-      height: rem(42),
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-    },
-
-    ...theme.fn.hover({
+    '&:hover': {
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-    }),
+      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+
+      [`& .${getStylesRef('icon')}`]: {
+        color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+      },
+    },
+  },
+
+  linkIcon: {
+    ref: getStylesRef('icon'),
+    color: "#7A9D54",
+    marginRight: theme.spacing.sm,
   },
 
   subLink: {
     width: '100%',
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
     borderRadius: theme.radius.md,
-
-    ...theme.fn.hover({
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-    }),
-
-    '&:active': theme.activeStyles,
   },
 
   dropdownFooter: {
@@ -157,25 +157,8 @@ const path = [
 
 export default function HeaderMenu({setTarget}: any) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const { classes, theme } = useStyles();
+  const { classes, cx } = useStyles();
   const { height, width } = useViewportSize();
-
-  const openTalkTagForm = () =>
-    modals.openConfirmModal({
-      title: 'Delete your profile',
-      centered: true,
-      children: (
-        <Text size="sm">
-          Are you sure you want to delete your profile? This action is destructive and you will have
-          to contact support to restore your data.
-        </Text>
-      ),
-      labels: { confirm: 'Delete account', cancel: "No don't delete it" },
-      confirmProps: { color: 'red' },
-      onCancel: () => console.log('Cancel'),
-      onConfirm: () => console.log('Confirmed'),
-    });
 
   const links = path.map((item, index) => (
     <UnstyledButton className={classes.subLink} key={item.title} onClick={() => { setTarget(index); closeDrawer();}}>
@@ -195,6 +178,17 @@ export default function HeaderMenu({setTarget}: any) {
     </UnstyledButton>
   ));
 
+  const header_link = header_links.map((item, index) => (
+      <a
+        className={classes.link}
+        href={item.link}
+        key={item.title}
+      >
+        <item.icon className={classes.linkIcon} stroke={1.5} />
+        <span>{item.title}</span>
+      </a>
+  ));
+
   return (
     <Group position="right" h={rem(100)} w={width} >
       <Header height={rem(60)} className={classes.header}>
@@ -207,7 +201,7 @@ export default function HeaderMenu({setTarget}: any) {
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               {setTarget !== null && 
                 <HoverCard.Target>
-                  <a href="#" className={classes.link}>
+                  <a className={classes.link}>
                     <Center inline>
                       <Box component="span" mr={5} >
                         施設
@@ -229,7 +223,6 @@ export default function HeaderMenu({setTarget}: any) {
                 <Divider
                   my="sm"
                   mx="md"
-                  color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}
                 />
 
                 <SimpleGrid cols={2} spacing={0}>
@@ -281,54 +274,80 @@ export default function HeaderMenu({setTarget}: any) {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title={<Title size="h2" order={3} weight={700} color="#7A9D54">Menu</Title>}
         position="top" 
         className={classes.hiddenDesktop}
         zIndex={10000}
       >
-        <ScrollArea h={`calc(100vh - ${rem(100)})`} mx="-md">
-          <Divider mt="none" mb="md" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
-
-          <Anchor href="/" className={classes.link}>
-            Home
-          </Anchor>
-          <UnstyledButton className={classes.link} onClick={toggleLinks}>
-            <Center inline>
-              <Box component="span" mr={5}>
-                施設
-              </Box>
-              <IconChevronDown size={16} color="#7A9D54" />
-            </Center>
-          </UnstyledButton>
-          <Collapse in={linksOpened}>{links}</Collapse>
-          <a className={classes.link} >
-            <Text color="dimmed" mr={5}><IconBarrierBlock size={16}/></Text>
-            <Box component="span" mr={5} >
-              <Text color="dimmed">イベント情報</Text>
-            </Box>
-          </a>
-          <a className={classes.link} >
-            <Text color="dimmed" mr={5}><IconBarrierBlock size={16}/></Text>
-            <Box component="span" mr={5} >
-              <Text color="dimmed">予約状況</Text>
-            </Box>
-          </a>
-          <a href="https://www.gymlabo.kyutech.jp/blog/" target="_blank" className={classes.link}>
-            <Box component="span" mr={5}>
-              公式ブログ
-            </Box>
-            <IconExternalLink size={16}/>
-          </a>
-          <a href="https://www.gymlabo.kyutech.jp/contact/" target="_blank" className={classes.link}>
-            <Box component="span" mr={5}>
-              お問い合わせ
-            </Box>
-            <IconExternalLink size={16}/>
-          </a>
-
-          <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
-        </ScrollArea>
+        <Container>
+        <NavLink
+          label="Home"
+          icon={<IconHome2 className={classes.linkIcon} stroke={1.5} />}
+          childrenOffset={28}
+          onClick={() => window.location.href= "/"}
+          className={classes.link}
+        />
+        <NavLink
+          label="施設"
+          className={classes.link}
+          icon={<IconSignRight className={classes.linkIcon} stroke={1.5} />}
+          childrenOffset={28}
+        >
+          {links}
+        </NavLink>
+        <NavLink
+          label="予約状況"
+          icon={<IconCalendarStats className={classes.linkIcon} stroke={1.5} />}
+          childrenOffset={28}
+          className={classes.link}
+        />
+        <NavLink
+          label="話したい札"
+          icon={<IconUserPin className={classes.linkIcon} stroke={1.5} />}
+          childrenOffset={28}
+          onClick={() => window.location.href= "/talktag"}
+          className={classes.link}
+        />
+        <NavLink
+          label="お問い合わせ"
+          icon={<IconMessageQuestion className={classes.linkIcon} stroke={1.5} />}
+          childrenOffset={28}
+          
+          className={classes.link}
+        />
+      </Container>
       </Drawer>
     </Group>
   );
 }
+
+
+
+const header_links =  [
+  
+  {
+    icon: IconCode,
+    title: "施設",
+    link: "/"
+  },
+  {
+    icon: IconSignRight,
+    title: "イベント情報",
+    link: ""
+  },
+  {
+    icon: IconCode,
+    title: "予約状況",
+    link: ""
+  },
+  {
+    icon: IconCode,
+    title: "話したい札",
+    link: "/talktag"
+  },
+  {
+    icon: IconCode,
+    title: "お問い合わせ",
+    link: ""
+  }
+];
+
