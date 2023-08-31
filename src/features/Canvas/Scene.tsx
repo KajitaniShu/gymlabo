@@ -8,6 +8,12 @@ type SceneProps = {
 
 const Scene: FC<SceneProps> = ({ modelPath }, props) => {
   const gltf = useGLTF(modelPath);
+  gltf.scene.traverse((object: any) => {
+    if (object.isMesh){
+      object.castShadow=true;
+      object.receiveShadow=true;
+    }
+  })
 
   return (
     <mesh>

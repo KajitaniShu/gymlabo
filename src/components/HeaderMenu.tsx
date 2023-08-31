@@ -3,7 +3,7 @@ import {
   Header,
   HoverCard,
   Group,
-  Button,
+  Title,
   UnstyledButton,
   Text,
   SimpleGrid,
@@ -277,12 +277,11 @@ export default function HeaderMenu({setTarget}: any) {
       </Header>
 
       <Drawer
-        style={{right:0}}
         opened={drawerOpened}
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title={<Text weight={800} color="#7A9D54">Menu</Text>}
+        title={<Title size="h2" order={3} weight={700} color="#7A9D54">Menu</Title>}
         position="top" 
         className={classes.hiddenDesktop}
         zIndex={10000}
@@ -290,9 +289,9 @@ export default function HeaderMenu({setTarget}: any) {
         <ScrollArea h={`calc(100vh - ${rem(100)})`} mx="-md">
           <Divider mt="none" mb="md" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          <a href="#" className={classes.link}>
+          <Anchor href="/" className={classes.link}>
             Home
-          </a>
+          </Anchor>
           <UnstyledButton className={classes.link} onClick={toggleLinks}>
             <Center inline>
               <Box component="span" mr={5}>

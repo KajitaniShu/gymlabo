@@ -8,7 +8,7 @@ import { useViewportSize, useHotkeys  } from '@mantine/hooks';
 import Access from '../features/Canvas/Access'
 import { Loading } from '../features/Canvas/Loading'
 import { Canvas } from '@react-three/fiber'
-import { Preload } from '@react-three/drei'
+import { Preload, ContactShadows, Environment } from '@react-three/drei'
 import { TargetDetail } from '../components/TargetDetail'
 import HeaderMenu from '../components/HeaderMenu'
 
@@ -41,23 +41,19 @@ export default function Home() {
       camera={{ position: [-3,3,3],  fov: 60}}
     
     >
+      <Environment preset="city" resolution={1024} blur={0.8} />
       <color attach="background" args={["#C9DBB2"]} />
-      <ambientLight intensity={2.6}/>
-      <directionalLight
-        color="white"
-        position={[-10,20,0]}
-        intensity={2.5}
-      />
+      <ambientLight intensity={2.8}/>
+
       <Suspense fallback={<Loading />}>
         <CameraManager cameraRef={ref} target={target} setTarget={setTarget} debug={debug}/>
-        <Physics debug={debug}>
           <Scene
             modelPath={'/gymlabo_sub.glb'}
           />
-          <StageCollision />
+          <ContactShadows frames={1} opacity={0.05} scale={5} blur={0.5} far={1} resolution={256} color="#000000"/>
+
           <Content debug={debug}/>
           <Access target={target} />
-        </Physics>
       </Suspense>
       <Preload all />
     </Canvas> 
