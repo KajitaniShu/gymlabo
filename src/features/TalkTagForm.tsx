@@ -1,18 +1,23 @@
-import { useState, useRef, Suspense } from 'react'
-import { Container, rem, Breadcrumbs, Text, px, Title, Textarea, Loader, Center, Anchor, TextInput, Button, Group, AspectRatio, Paper } from '@mantine/core';
+import { useEffect, useRef, Suspense } from 'react'
+import { Container, rem, Breadcrumbs, Text, px, Title, createStyles, Textarea, Loader, Center, Anchor, TextInput, Button, Group, AspectRatio, Paper } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 import HeaderMenu from '../components/HeaderMenu'
 import { Authentication } from './Authentication'
+import { Vector3, Mesh, Plane } from 'three';
 import { IconUserPin } from '@tabler/icons-react';
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, googleProvider } from '../config/firebase'
 import { RichTextEditor, Link } from '@mantine/tiptap';
-import { Preload, OrbitControls } from '@react-three/drei'
+import { Preload, OrbitControls, useGLTF, Html } from '@react-three/drei'
 import { useEditor } from '@tiptap/react';
+import { useDrag } from "@use-gesture/react";
 import StarterKit from '@tiptap/starter-kit';
-import { Canvas } from '@react-three/fiber'
+import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber'
 import { Loading } from '../features/Canvas/Loading'
 import Scene from '../features/Canvas/Scene'
+import Test from '../features/Canvas/Test'
+import JumpCharacter from './Canvas/JumpCharacter';
+import {Banner} from './Canvas/Banner'
 
 
 // import Underline from '@tiptap/extension-underline';
@@ -21,6 +26,54 @@ import Scene from '../features/Canvas/Scene'
 // import SubScript from '@tiptap/extension-subscript';
 
 export function TalkTagForm() {
+
+  const useStyles = createStyles((theme) => ({
+    icon: {
+      color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[5],
+    },
+  
+    name: {
+      fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+    },
+  }));
+
+  
+
+
+  const gltf = useGLTF('/gymlabo_sub.glb');
+  const player = useRef<any>();
+  let _pos = new Vector3();
+  const plane = new Plane(new Vector3(0, 1, 0), 0);  
+
+  // 2本指で操作した場合の処理
+  const twoFing = useRef(false);
+  window.addEventListener('touchstart', function(e) {
+    if (e.targetTouches.length > 1) twoFing.current = true;
+  }, false);
+  window.addEventListener('touchend', function(e) {
+    twoFing.current = false;
+  }, false);
+  window.addEventListener('mousedown', (e) => {
+    if(e.button === 2) {
+      twoFing.current = true;
+    }
+  });
+  window.addEventListener('mouseup', (e) => {
+    twoFing.current = false;
+  });
+
+  const bind = useDrag<ThreeEvent<MouseEvent>>(
+    ({event}) => {
+      if(!twoFing.current) event.ray.intersectPlane(plane, _pos);
+      if(player.current !== undefined){
+        console.log(event)
+        player.current.position.x = event.intersections[0].point.x;
+        player.current.position.y = event.intersections[0].point.y;
+        player.current.position.z = event.intersections[0].point.z;
+      }
+    }
+  );
+
   const [user, initialising] = useAuthState(auth);
   const content = '';
   const { height } = useViewportSize();
@@ -36,6 +89,7 @@ export function TalkTagForm() {
     ],
     content,
   });
+
 
   return (
     <>
@@ -59,13 +113,13 @@ export function TalkTagForm() {
           </Title>
           <TextInput
             my="xl"
-            placeholder=""
+            placeholder="ひいらぎ"
             label="表示する名前"
             withAsterisk
           />
           <Textarea
             my="xl"
-            placeholder=""
+            placeholder="○○時までいるのでいつでも話しかけてください～"
             label="コメント"
             withAsterisk
           />
@@ -135,9 +189,23 @@ export function TalkTagForm() {
                 <Scene
                   modelPath={'/gymlabo_sub.glb'}
                 />
+            <mesh {...bind() as any}>
+              <primitive 
+                object={gltf.scene.clone()}
+              />
+            </mesh>
+            <group ref={player}>
+              <mesh>
+                <Html position={[0, 0.26, 0]} sprite distanceFactor={0.8}> 
+                  <Banner name={"ひいらぎ"} comment={"○○時までいるので話しかけてください～"} />
+                </Html>
+              </mesh>
+              <JumpCharacter ref={player} position={[0, 0.035, 0]} rotation-y={0} path={"/character/character2.glb"} scale={[0.023, 0.023, 0.023]} />
+            </group>
             </Suspense>
             <OrbitControls />
             <Preload all />
+            <Test />
           </Canvas> 
         </Paper>
           </AspectRatio>

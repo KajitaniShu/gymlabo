@@ -13,7 +13,7 @@ export default function JumpCharacter({path, ...props}: any) {
     const nod = () => {
       api.start({ 'position-y': isJump ? 1.8 : 0 });
       if(isJump) setTimeout(nod, 10);
-      else      timer = setTimeout(nod, (1 + Math.random() * 10) * 1000);
+      else      timer = setTimeout(nod, (1 + Math.random() * 5) * 1000);
       isJump = !isJump;
     }
     nod();

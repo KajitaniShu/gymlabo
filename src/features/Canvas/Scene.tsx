@@ -16,10 +16,10 @@ const Scene: FC<SceneProps> = ({ modelPath }, props) => {
   })
 
   return (
-    <mesh>
+    <mesh {...props}>
       <primitive 
         object={gltf.scene.clone()}
-        {...props}
+        
       />
     </mesh>
   )
