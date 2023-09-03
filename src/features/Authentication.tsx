@@ -1,13 +1,15 @@
 import React from 'react'
 import { useToggle } from '@mantine/hooks';
 import { rem, Breadcrumbs, Text, Anchor,Paper, Group, TextInput, PasswordInput, Divider, Button } from '@mantine/core';
+import { useViewportSize  } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { FcGoogle } from 'react-icons/fc';
 import { IconUser } from '@tabler/icons-react';
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signInWithRedirect, signInAnonymously } from "firebase/auth";
 import { auth, googleProvider } from '../config/firebase'
 
 export function Authentication() {
+  const { width, height } = useViewportSize();
   const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
     initialValues: {
@@ -67,10 +69,10 @@ export function Authentication() {
             </Anchor>
           </Group>
         <Divider my="xl" label={<Text size="xs" color="dimmed">または</Text>}  labelPosition="center" />
-        <Button onClick={()=>signInWithPopup(auth, googleProvider)} variant="default" leftIcon={<FcGoogle />} color="gray" my="md" fullWidth>
+        <Button onClick={()=>{width > 1000 ? signInWithRedirect(auth, googleProvider) : signInWithPopup(auth, googleProvider)}} variant="default" leftIcon={<FcGoogle />} color="gray" my="md" fullWidth>
           Googleでログイン
         </Button>
-        <Button variant="default" leftIcon={<IconUser size="1rem"/>} color="gray" my="md" fullWidth>
+        <Button onClick={()=>signInAnonymously(auth)} variant="default" leftIcon={<IconUser size="1rem"/>} color="gray" my="md" fullWidth>
           匿名で続ける
         </Button>
       </Paper>
