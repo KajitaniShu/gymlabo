@@ -6,6 +6,9 @@ import { Authentication } from './Authentication'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, googleProvider } from '../config/firebase'
 import { IconPencil, IconDots, IconMessages, IconTrash, IconReportAnalytics, IconNote } from '@tabler/icons-react';
+import {collection, doc, getDocs, query, where, getFirestore } from 'firebase/firestore';
+import { db }  from '../config/firebase';
+import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
 
 const data =  [
     {
@@ -47,27 +50,26 @@ const data =  [
 
 
 
-export function TalkTagList() {
+export function TalkTagList({user}:any) {
 
-  const rows = data.map((item) => (
+  const talkTagQuery = query(collection(db, "talktag-data"), where("isPublic", "==", true));
+  const [talkTagData, loading, error, snapshot, reload] = useCollectionDataOnce(talkTagQuery);
+  console.log(talkTagData)
+
+  const rows = talkTagData?.map((item) => (
     <tr key={item.name}>
       <td>
-        <Group spacing="sm">
-          <div>
-            <Text fz="sm" fw={500}>
+        <Group spacing={0} >
+            <Text size="sm" lineClamp={1}>
               {item.name}
             </Text>
-            <Text c="dimmed" fz="xs">
-              {item.job}
+            <Text color="dimmed" size="xs" lineClamp={1}>
+              {item.affiliation}
             </Text>
-          </div>
         </Group>
       </td>
       <td>
-        <Text fz="sm">{item.email}</Text>
-        <Text fz="xs" c="dimmed">
-          Email
-        </Text>
+        <Text size="xs" lineClamp={1}>{item.comment}</Text>
       </td>
       <td>
         <Group spacing={0} position="right">

@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, addDoc, query, setDoc, updateDoc, Timestamp } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { GoogleAuthProvider, signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { Vector3 } from 'three'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,22 +28,33 @@ const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
 
 
-// ユーザー情報新規登録
-async function addUser(name: any, language: any, uuid: any) {
+// 話したい札新規登録
+async function addTalkTag(
+  name: any, 
+  uuid: any,
+  affiliation: any,
+  comment: any,
+  message: any,
+  position: Vector3,
+  isPublic: boolean
+) {
+  console.log(
+    name, 
+  uuid,
+  comment,
+  message,
+  position,
+  isPublic,
+  );
   const update = Timestamp.now(); 
-  const docRef = await setDoc(doc(db, "user-data", uuid), {
-    name: name,
+  const docRef = await setDoc(doc(db, "talktag-data", uuid), {
+    name: name, 
     uuid: uuid,
-    level: 1.0,
-    money: 0,
-    win: 0,
-    lose: 0,
-    assign: null,
-    assignType: null,
-    language: language,
-    update: update,
-    friends: {},
-    history: {}
+    affiliation: affiliation,
+    comment: comment,
+    message: message,
+    position: [position.x, position.y, position.z],
+    isPublic: isPublic
   });
 }
 
@@ -60,4 +72,4 @@ const docRef = await updateDoc(doc(db, "user-data", uuid), {
 });
 }
 
-export {db, googleProvider, auth, addUser, assignRoom};
+export {db, googleProvider, auth, addTalkTag, assignRoom};

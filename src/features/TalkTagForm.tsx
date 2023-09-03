@@ -1,23 +1,24 @@
-import { useEffect, useRef, Suspense } from 'react'
-import { Container, rem, Breadcrumbs, Text, Alert, px, Title, createStyles, Textarea, Loader, Center, Anchor, TextInput, Button, Group, AspectRatio, Paper } from '@mantine/core';
+import { useState, useRef, Suspense } from 'react'
+import { Container, rem, Breadcrumbs, Text, Alert, px, LoadingOverlay, createStyles, Textarea, Loader, Center, Anchor, TextInput, Button, Group, AspectRatio, Paper } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 import HeaderMenu from '../components/HeaderMenu'
 import { Authentication } from './Authentication'
 import { Vector3, Mesh, Plane } from 'three';
 import { IconUserPin } from '@tabler/icons-react';
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, googleProvider } from '../config/firebase'
+import { auth, addTalkTag } from '../config/firebase'
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { Preload, OrbitControls, useGLTF, Html } from '@react-three/drei'
 import { useEditor } from '@tiptap/react';
 import { useDrag } from "@use-gesture/react";
 import StarterKit from '@tiptap/starter-kit';
-import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber'
+import { Canvas, ThreeEvent } from '@react-three/fiber'
 import { Loading } from './Canvas/Loading'
 import Scene from './Canvas/Scene'
 import Test from './Canvas/Test'
 import JumpCharacter from './Canvas/JumpCharacter';
-import {Banner} from './Canvas/Banner'
+import { Banner } from './Canvas/Banner'
+import { useForm } from '@mantine/form';
 import { IconZoomQuestion } from '@tabler/icons-react';
 
 // import Underline from '@tiptap/extension-underline';
@@ -27,21 +28,25 @@ import { IconZoomQuestion } from '@tabler/icons-react';
 
 export function TalkTagForm() {
 
-  const useStyles = createStyles((theme) => ({
-    icon: {
-      color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[5],
+  const form = useForm({
+    initialValues: {
+      name: '',
+      affiliation: '',
+      comment: '',
+      message: '',
+      isPublic: false,
     },
-  
-    name: {
-      fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    },
-  }));
 
+    validate: {
+      
+    },
+  });
   
   const gltf = useGLTF('/gymlabo_sub.glb');
   const player = useRef<any>();
   let _pos = new Vector3();
   const plane = new Plane(new Vector3(0, 1, 0), 0);  
+  const [loading, setLoading] = useState(false);
 
   // 2本指で操作した場合の処理
   const twoFing = useRef(false);
@@ -85,8 +90,26 @@ export function TalkTagForm() {
       //Highlight,
       //TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
+    onUpdate(props) {
+      form.setFieldValue('message', props.editor.getHTML());
+    },
     content,
   });
+
+  const submit = async (isPublic: boolean) => {
+    if(!user) return;
+    setLoading(true);
+    await addTalkTag(
+      form.getInputProps("name").value,         // name 
+      user.uid,                                 // uuid
+      form.getInputProps("affiliation").value,  // affiliation
+      form.getInputProps("comment").value,      // comment
+      form.getInputProps("message").value,      // message
+      new Vector3(0, 0, 0),                     // position
+      isPublic                                  // isPublic
+    )
+    setLoading(false);
+  }
 
 
   return (
@@ -107,17 +130,35 @@ export function TalkTagForm() {
         <>
         {user ? 
         <>
+          <LoadingOverlay 
+            overlayColor="#c5c5c5"
+            visible={loading}
+          />
+          <form
+            onSubmit={form.onSubmit((values) => console.log(values))}
+          >
+            
           <TextInput
             mt={rem(100)}
             mb="xl"
             placeholder="ひいらぎ"
+            {...form.getInputProps('name')} 
             label="表示する名前"
+            withAsterisk
+          />
+          <TextInput
+            my="xl"
+            placeholder="情報工学府 修士2年"
+            {...form.getInputProps('affiliation')} 
+            label="所属"
             withAsterisk
           />
           <Textarea
             my="xl"
             placeholder="○○時までいるのでいつでも話しかけてください～"
+            {...form.getInputProps('comment')} 
             label="コメント"
+            
             withAsterisk
           />
           <Text size="sm" mt="xl">さらに伝えたいこと</Text>
@@ -208,10 +249,11 @@ export function TalkTagForm() {
           </AspectRatio>
         <Group position="right" mt={rem(50)} mb={rem(100)}>
           <Group position="apart">
-          <Button variant="default" w={rem(100)} type="submit">一時保存</Button>
-          <Button w={rem(100)} type="submit">投稿</Button>
+          <Button variant="default" w={rem(100)} onClick={()=> submit(false)}>一時保存</Button>
+          <Button w={rem(100)} onClick={()=> submit(true)}>投稿</Button>
           </Group>
         </Group>
+        </form>
         </>
         :
           <Authentication />
