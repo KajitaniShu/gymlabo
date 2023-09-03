@@ -4,7 +4,7 @@ import { rem, Breadcrumbs, Text, Anchor,Paper, Group, TextInput, PasswordInput, 
 import { useForm } from '@mantine/form';
 import { FcGoogle } from 'react-icons/fc';
 import { IconUser } from '@tabler/icons-react';
-import { signInWithRedirect } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from '../config/firebase'
 
 export function Authentication() {
@@ -67,7 +67,7 @@ export function Authentication() {
             </Anchor>
           </Group>
         <Divider my="xl" label={<Text size="xs" color="dimmed">または</Text>}  labelPosition="center" />
-        <Button onClick={()=>signInWithRedirect(auth, googleProvider)} variant="default" leftIcon={<FcGoogle />} color="gray" my="md" fullWidth>
+        <Button onClick={()=>signInWithPopup(auth, googleProvider)} variant="default" leftIcon={<FcGoogle />} color="gray" my="md" fullWidth>
           Googleでログイン
         </Button>
         <Button variant="default" leftIcon={<IconUser size="1rem"/>} color="gray" my="md" fullWidth>
