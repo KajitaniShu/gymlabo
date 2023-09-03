@@ -1,5 +1,5 @@
 import { useEffect, useRef, Suspense } from 'react'
-import { Container, rem, Breadcrumbs, Text, px, Title, createStyles, Textarea, Loader, Center, Anchor, TextInput, Button, Group, AspectRatio, Paper } from '@mantine/core';
+import { Container, rem, Breadcrumbs, Text, Alert, px, Title, createStyles, Textarea, Loader, Center, Anchor, TextInput, Button, Group, AspectRatio, Paper } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 import HeaderMenu from '../components/HeaderMenu'
 import { Authentication } from './Authentication'
@@ -13,12 +13,12 @@ import { useEditor } from '@tiptap/react';
 import { useDrag } from "@use-gesture/react";
 import StarterKit from '@tiptap/starter-kit';
 import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber'
-import { Loading } from '../features/Canvas/Loading'
-import Scene from '../features/Canvas/Scene'
-import Test from '../features/Canvas/Test'
+import { Loading } from './Canvas/Loading'
+import Scene from './Canvas/Scene'
+import Test from './Canvas/Test'
 import JumpCharacter from './Canvas/JumpCharacter';
 import {Banner} from './Canvas/Banner'
-
+import { IconZoomQuestion } from '@tabler/icons-react';
 
 // import Underline from '@tiptap/extension-underline';
 // import TextAlign from '@tiptap/extension-text-align';
@@ -38,8 +38,6 @@ export function TalkTagForm() {
   }));
 
   
-
-
   const gltf = useGLTF('/gymlabo_sub.glb');
   const player = useRef<any>();
   let _pos = new Vector3();
@@ -98,7 +96,8 @@ export function TalkTagForm() {
       <Container size="sm">
       <Breadcrumbs separator=">">
         <Anchor size="xs" td="underline" component="a" href="/" color="dimmed">ホーム</Anchor>
-        <Text size="xs" color="dimmed">話したい札</Text>
+        <Anchor size="xs" td="underline" component="a" href="/talktag" color="dimmed">話したい札</Anchor>
+        <Text size="xs" color="dimmed">新規作成</Text>
       </Breadcrumbs>
       {initialising ? 
         <Center h={height-px(rem(200))}>
@@ -108,11 +107,9 @@ export function TalkTagForm() {
         <>
         {user ? 
         <>
-          <Title mt="xl" mb={rem(70)} order={3} size="h1" color="dark.5">
-              話したい札
-          </Title>
           <TextInput
-            my="xl"
+            mt={rem(100)}
+            mb="xl"
             placeholder="ひいらぎ"
             label="表示する名前"
             withAsterisk
@@ -211,8 +208,8 @@ export function TalkTagForm() {
           </AspectRatio>
         <Group position="right" mt={rem(50)} mb={rem(100)}>
           <Group position="apart">
-          <Button variant="default" w={rem(100)}>一時保存</Button>
-          <Button w={rem(100)}>投稿</Button>
+          <Button variant="default" w={rem(100)} type="submit">一時保存</Button>
+          <Button w={rem(100)} type="submit">投稿</Button>
           </Group>
         </Group>
         </>

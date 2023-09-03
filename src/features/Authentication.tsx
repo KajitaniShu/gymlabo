@@ -25,7 +25,7 @@ export function Authentication() {
   return (
     <>
       <Group position="center" mt="xl">
-        <Text size="lg" mb="sm" color="dark.3" weight={700}>
+        <Text size="lg" mb="sm" mt="xl" color="dark.3" weight={700}>
           ログイン
         </Text>
       </Group>
